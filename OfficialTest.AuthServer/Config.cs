@@ -1,10 +1,19 @@
 ﻿using IdentityServer4.Models;
+using IdentityServer4.Test;
 using System.Collections.Generic;
 
 namespace OfficialTest.AuthServer
 {
     public static class Config
     {
+        public static List<TestUser> GetUsers()
+        {
+            return new List<TestUser> {
+                new TestUser{SubjectId="1", Username="alice", Password="password"},
+                new TestUser{SubjectId="2", Username="bob", Password="password"}
+            };
+        }
+
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new IdentityResource[] { new IdentityResources.OpenId() };
@@ -34,6 +43,13 @@ namespace OfficialTest.AuthServer
 
                     // Client允许的Scopes
                     AllowedScopes = { "api1" }
+                },
+                new Client
+                {
+                    ClientId = "ro.client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets = {new Secret("secret".Sha256())},
+                    AllowedScopes={"api1"}
                 }
             };
         }
