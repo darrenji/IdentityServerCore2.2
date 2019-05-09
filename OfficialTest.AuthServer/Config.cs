@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
 
@@ -16,7 +17,11 @@ namespace OfficialTest.AuthServer
 
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
-            return new IdentityResource[] { new IdentityResources.OpenId() };
+            return new IdentityResource[] {
+
+                new IdentityResources.OpenId(), //包括了subject id
+                new IdentityResources.Profile()//包括了name, last name, etc
+            };
         }
 
         public static IEnumerable<ApiResource> GetApis()
@@ -50,6 +55,19 @@ namespace OfficialTest.AuthServer
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = {new Secret("secret".Sha256())},
                     AllowedScopes={"api1"}
+                },
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    RedirectUris = {"http://localhost:5003/signin-oidc"},
+                    PostLogoutRedirectUris= {"http://localhost:5003/signout-callback-oidc"},
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
         }

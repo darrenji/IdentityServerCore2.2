@@ -16,6 +16,46 @@
 - ApiScopeClaims:与API相关的Scope下的Claim
 - ApiSecrets:用来查看Token
 
+**OAuth**
+
+基于token的协议，规范Authorization授权，管着谁使用什么资源。OAuth的几种endpoint:
+
+- /authorize 请求token
+- /token 请求token，刷新token,使用authorization code换取token
+- /revocation 吊销token
+
+**OpenID Connect**
+
+在OAuth基础上的扩展，规范验证Authentication,管着查看是谁。OpenID Connect的几种endpoint:
+
+- /userinfo
+- /checksession
+- /endsession
+- /.well-known/openid-configuration
+- /.well-known/jwks
+
+**token的有效性**
+
+client可以向验证服务器吊销token, 但需要api主动向验证服务器查询。
+
+**token如何保证安全**
+
+验证给出token的时候用到了private key, 同时给外部一个public key,当Client向API请求，API会向验证服务器申请public key或者把从Client端获取的token交给验证服务器。
+
+**token包含了什么**？
+
+private签名，email, 权限，到期时间，是哪个authorization server发布的。
+
+**Flow**
+
+- redirect flow, implicit grant, 当客户第一次向client发送请求，redirect到验证服务器
+- credetial flow, 包括resource owner password credentials, client credential
+
+**scope**
+
+- OpenID Connect:openid, profile, email, address
+- API级别的scope
+
 ## 开始实践
 
 在vs2019中创建"ASP.NET Core Web应用程序"，选择SDK的版本"ASP.NET Core 2.2"，选择"空"模板。
